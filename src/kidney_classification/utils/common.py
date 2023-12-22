@@ -1,3 +1,4 @@
+import os
 import json
 import yaml
 import base64
@@ -12,17 +13,17 @@ from kidney_classification import logger
 
 @ensure_annotations
 def read_yaml(path_to_yaml: Path) -> ConfigBox:
-    """read yaml file and return a ConfigBox object
+    """reads yaml file and returns
 
     Args:
-        path_to_yaml (Path): path like input
+        path_to_yaml (str): path like input
 
     Raises:
         ValueError: if yaml file is empty
         e: empty file
 
     Returns:
-        ConfigBox: ConfigBox object
+        ConfigBox: ConfigBox type
     """
     try:
         with open(path_to_yaml) as yaml_file:
@@ -30,59 +31,32 @@ def read_yaml(path_to_yaml: Path) -> ConfigBox:
             logger.info(f"yaml file: {path_to_yaml} loaded successfully")
             return ConfigBox(content)
     except BoxValueError:
-        raise ValueError(f"Yaml file {path_to_yaml} is empty")
+        raise ValueError("yaml file is empty")
     except Exception as e:
         raise e
 
 
 @ensure_annotations
-def save_json(path: Path, data: dict):
-    """save the data in json format
+def create_directories(path_to_directories: list, verbose=True):
+    """create list of directories
 
     Args:
-        path (Path): path to json file
-        data (dict): data to be saved
+        path_to_directories (list): list of path of directories
+        ignore_log (bool, optional): ignore if multiple dirs is to be created. Defaults to False.
     """
-    with open(path, 'w') as f:
-        json.dump(data, f, indent=4)
-    logger.info(f"json file: {path} saved successfully")
+    for path in path_to_directories:
+        os.makedirs(path)
+        if verbose:
+            logger.info(f"created directory at: {path}")
 
 
-@ensure_annotations
-def save_bin(data: Any, path: Path):
-    """save binary data
-
-    Args:
-        data (Any): data to be saved
-        path (Path): path to bin file
-    """
-    joblib.dump(value=data, filename=path)
-    logger.info(f"bin file: {path} saved successfully")
-
-
-@ensure_annotations
-def load_bin(path: Path) -> Any:
-    """load binary data
-
-    Args:
-        path (Path): path to bin file
-
-    Returns:
-        Any: data
-    """
-    data = joblib.load(filename=path)
-    logger.info(f"bin file: {path} loaded successfully")
-    return data
-
-
-def decodeImage(imagestring, fileName):
-    imagedata = base64.b64decode(imagestring)
-    with open(fileName, 'wb') as f:
-        f.write(imagedata)
+def decodeImage(imgstring, fileName):
+    imgdata = base64.b64decode(imgstring)
+    with open(fileName, "wb") as f:
+        f.write(imgdata)
         f.close()
 
 
-def encodeImage(imagePath):
-    with open(imagePath, "rb") as image_file:
-        encoded_string = base64.b64encode(image_file.read())
-        return encoded_string
+def encodeImageIntoBase64(croppedImagePath):
+    with open(croppedImagePath, "rb") as f:
+        return base64.b64encode(f.read())
