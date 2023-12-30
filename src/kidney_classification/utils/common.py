@@ -45,9 +45,12 @@ def create_directories(path_to_directories: list, verbose=True):
         ignore_log (bool, optional): ignore if multiple dirs is to be created. Defaults to False.
     """
     for path in path_to_directories:
-        os.makedirs(path)
-        if verbose:
-            logger.info(f"created directory at: {path}")
+        if not os.path.exists(path):
+            os.makedirs(path)
+            if verbose:
+                logger.info(f"created directory at: {path}")
+        else:
+            continue
 
 
 def decodeImage(imgstring, fileName):
