@@ -1,59 +1,45 @@
-import os
-from zipfile import ZipFile
-import urllib.request as request
 import tensorflow as tf
 from pathlib import Path
 from kidney_classification.entity.config_entity import PrepareBaseModelConfig
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Flatten, BatchNormalization, Dropout
 
 
 class PrepareBaseModel:
-    def __init__(self, config: PrepareBaseModelConfig):
-        self.config = config
-
-    def get_base_model(self):
-        self.model = tf.keras.applications.vgg16.VGG16(
-            input_shape=self.config.params_image_size,
-            weights=self.config.params_weights,
-            include_top=self.config.params_include_top,
-        )
-
-        self.save_model(path=self.config.base_model_path, model=self.model)
-
     @staticmethod
-    def _prepare_full_model(model, classes, freeze_all, freeze_till, learning_rate):
-        if freeze_all:
-            for layer in model.layers:
-                model.trainable = False
-        elif (freeze_till is not None) and (freeze_till > 0):
-            for layer in model.layers[:-freeze_till]:
-                model.trainable = False
+    def prepare_full_model():
+        VGG_model = Sequential()
 
-        flatten_in = tf.keras.layers.Flatten()(model.output)
-        prediction = tf.keras.layers.Dense(units=classes, activation="softmax")(
-            flatten_in
+        pretrained_model = tf.keras.applications.VGG16(
+            include_top=False,
+            input_shape=(150, 150, 3),
+            pooling="max",
+            classes=4,
+            weights="imagenet",
         )
 
-        full_model = tf.keras.models.Model(inputs=model.input, outputs=prediction)
+        VGG_model.add(pretrained_model)
+        VGG_model.add(Flatten())
+        VGG_model.add(Dense(512, activation="relu"))
+        VGG_model.add(BatchNormalization())
+        VGG_model.add(Dropout(0.5))
 
-        full_model.compile(
-            optimizer=tf.keras.optimizers.SGD(learning_rate=learning_rate),
-            loss=tf.keras.losses.CategoricalCrossentropy(),
+        VGG_model.add(Dense(4, activation="softmax"))
+        pretrained_model.trainable = False
+
+        VGG_model.compile(
+            optimizer="adam",
+            loss="sparse_categorical_crossentropy",
             metrics=["accuracy"],
         )
 
+        return VGG_model
+
+    def update_base_model(self, config: PrepareBaseModelConfig):
+        full_model = self.prepare_full_model()
+
         full_model.summary()
-        return full_model
-
-    def update_base_model(self):
-        self.full_model = self._prepare_full_model(
-            model=self.model,
-            classes=self.config.params_classes,
-            freeze_all=True,
-            freeze_till=None,
-            learning_rate=self.config.params_learning_rate,
-        )
-
-        self.save_model(path=self.config.updated_base_model_path, model=self.full_model)
+        full_model.save(config.updated_base_model_path)
 
     @staticmethod
     def save_model(path: Path, model: tf.keras.Model):
