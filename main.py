@@ -12,14 +12,14 @@ from kidney_classification.pipeline.model_training import ModelTrainingPipeline
 
 STAGE_NAME = "Data Ingestion"
 
-# try:
-#     logger.info(f"-------------Running stage: {STAGE_NAME}-------------")
-#     pipeline = DataIngestionTrainingPipeline()
-#     pipeline.main()
-#     logger.info(f"-------------Stage: {STAGE_NAME} completed-------------")
-# except Exception as e:
-#     logger.exception(e)
-#     raise e
+try:
+    logger.info(f"-------------Running stage: {STAGE_NAME}-------------")
+    pipeline = DataIngestionTrainingPipeline()
+    pipeline.main()
+    logger.info(f"-------------Stage: {STAGE_NAME} completed-------------")
+except Exception as e:
+    logger.exception(e)
+    raise e
 
 
 STAGE_NAME = "Prepare base model"
