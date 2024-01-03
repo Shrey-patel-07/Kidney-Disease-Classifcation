@@ -1,14 +1,16 @@
 import sys
 
 sys.path.append("./src")
-from kidney_classification.pipeline.model_evaluation_with_mlflow import (
+from kidney_classification.pipeline.stage_04_model_evaluation_with_mlflow import (
     EvaluationPipeline,
 )
-from kidney_classification.pipeline.model_training import ModelTrainingPipeline
-from kidney_classification.pipeline.prepare_base_model import (
+from kidney_classification.pipeline.stage_03_model_training import ModelTrainingPipeline
+from kidney_classification.pipeline.stage_02_prepare_base_model import (
     PrepareBaseModelTrainingPipeline,
 )
-from kidney_classification.pipeline.data_pipeline import DataIngestionTrainingPipeline
+from kidney_classification.pipeline.stage_01_data_pipeline import (
+    DataIngestionTrainingPipeline,
+)
 from kidney_classification import logger
 
 
