@@ -1,3 +1,6 @@
+import sys
+
+sys.path.append("./src")
 from kidney_classification.config.configuration import ConfigurationManager
 from kidney_classification.components.model_evaluation_mlflow import Evaluation
 from kidney_classification import logger

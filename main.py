@@ -8,7 +8,7 @@ from kidney_classification.pipeline.stage_03_model_training import ModelTraining
 from kidney_classification.pipeline.stage_02_prepare_base_model import (
     PrepareBaseModelTrainingPipeline,
 )
-from kidney_classification.pipeline.stage_01_data_pipeline import (
+from kidney_classification.pipeline.stage_01_data_ingestion import (
     DataIngestionTrainingPipeline,
 )
 from kidney_classification import logger

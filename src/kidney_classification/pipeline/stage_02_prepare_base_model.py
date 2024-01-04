@@ -1,3 +1,6 @@
+import sys
+
+sys.path.append("./src")
 from kidney_classification.config.configuration import ConfigurationManager
 from kidney_classification.components.prepare_base_model import PrepareBaseModel
 from kidney_classification import logger

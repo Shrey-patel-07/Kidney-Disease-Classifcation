@@ -52,7 +52,6 @@ class Evaluation:
             mlflow.log_metrics({"loss": self.score[0], "accuracy": self.score[1]})
             # Model registry does not work with file store
             if tracking_url_type_store != "file":
-                # Register the model
                 mlflow.keras.log_model(
                     self.model, "model", registered_model_name="VGG16Model"
                 )

@@ -1,3 +1,6 @@
+import sys
+
+sys.path.append("./src")
 from kidney_classification.config.configuration import ConfigurationManager
 from kidney_classification.components.data_ingestion import DataIngestion
 from kidney_classification import logger
