@@ -156,3 +156,6 @@ artifacts/*
 
 #mlflow runs
 mlruns/
+
+#input images
+inputImage.jpg

@@ -21,11 +21,11 @@ class PredictionPipeline:
             prediction = "Cyst"
             return [{"image": prediction}]
         elif result[0] == 1:
-            prediction = "Tumor"
+            prediction = "Normal"
             return [{"image": prediction}]
         elif result[0] == 2:
             prediction = "Stone"
             return [{"image": prediction}]
         else:
-            prediction = "Normal"
+            prediction = "Tumor"
             return [{"image": prediction}]
